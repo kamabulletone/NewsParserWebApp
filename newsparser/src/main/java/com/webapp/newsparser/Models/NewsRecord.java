@@ -29,10 +29,10 @@ public class NewsRecord {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "content_link")
+    @Column(name = "content_link", unique = true)
     private String contentLink;
 
-    @Column(name = "created_on", nullable = false)
+    @Column(name = "created_on", nullable = false, updatable = false)
     private LocalDateTime createdOn;
 
     @OneToMany(targetEntity = Picture.class)
