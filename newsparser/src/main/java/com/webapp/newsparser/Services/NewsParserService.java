@@ -9,19 +9,51 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class NewsParserService {
 
-    private static final String URL_ECONOMY = "https://ria.ru/economy";
+    private static final String URL_BASE = "https://ria.ru/";
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    public LocalDateTime convertStringToDateTime(String str, LocalDateTime currentDateTime) {
+        String resPostedTime;
+        if (str.matches("(?m)^(\\d\\d:\\d\\d)")) {  //21:25
+            resPostedTime = currentDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + str;
+            return LocalDateTime.parse(resPostedTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        } else if (str.contains("Вчера")) { // Вчера, 21:25
+            String[] strBuff = str.split(", ");
+            String time = strBuff[1];
+            resPostedTime = currentDateTime.minus(1, ChronoUnit.DAYS).
+                    format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + time;
+            return LocalDateTime.parse(resPostedTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        } else { //13 ноября, 21:25 ; 9 июля 2015, 21:25
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-MMMM-yyyy", new Locale("ru"));
+            String[] strBuff = str.split(", ");
+            LocalDate date;
+            if (str.matches(".*\\s\\d{4},\\s.*")) {
+                System.out.println("HAS YEAR");
+                date = LocalDate.parse(strBuff[0].replace(" ", "-"), formatter);
+            } else {
+                System.out.println("NO YEAR");
+                date = LocalDate.parse((strBuff[0] + " " + currentDateTime.getYear()).replace(" ", "-"), formatter);
+            }
+            resPostedTime = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + strBuff[1];
+            return LocalDateTime.parse(resPostedTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        }
+    }
+
     private static final int NEWS_PARSE_COUNT = 4;
     NewsRecordRepository newsRecordRepository;
     PictureRepository pictureRepository;
@@ -31,15 +63,22 @@ public class NewsParserService {
         this.pictureRepository = pictureRepository;
     }
 
+    @Scheduled(cron = "*/5 * * * * *")
+    public void ScheduledParse() {
+        for (newsTagsEnum tag : newsTagsEnum.values()) {
+            parseNews(tag.toString());
+        }
+    }
+
     public List<NewsRecord> getLastNews() {
-        parseNews();
+        // parseNews();
         //return newsRecordRepository.findTop4ByOrderByIdAsc();
         return newsRecordRepository.findTop4ByOrderByCreatedOnDesc();
     }
 
-    public void parseNews() {
+    public void parseNews(String newsTheme) { //RIA
         try {
-            Document doc = Jsoup.connect(URL_ECONOMY).get();
+            Document doc = Jsoup.connect(URL_BASE + newsTheme).get();
             String title = doc.title();
             //System.out.println(title);
             String[] keyWords = doc.getElementsByAttributeValue("name", "analytics:keyw").attr("content").split(", ");
@@ -79,10 +118,14 @@ public class NewsParserService {
                 String postedTime = element.getElementsByClass("list-item__info") //инфо баннера: дата просмотры
                         .get(0).getElementsByClass("list-item__date").text(); //по популярности
                 //System.out.println(element.getElementsByClass("list-item__info"));
-                String resPostedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + postedTime;
-                LocalDateTime time = LocalDateTime.parse(resPostedTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
-                System.out.println(resPostedTime);
+                LocalDateTime time = convertStringToDateTime(postedTime, LocalDateTime.now());
+
+//                String resPostedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + postedTime;
+//                LocalDateTime time = LocalDateTime.parse(resPostedTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+
+                //System.out.println(resPostedTime);
+                System.out.println(time);
                 //System.out.println(time);
 
                 newsRecord.setPictures(pictures);
@@ -95,6 +138,7 @@ public class NewsParserService {
                     System.out.println(newsRecord);
                     newsRecordRepository.save(newsRecord);
                 }
+
 
 
                 //System.out.println(test);
@@ -116,4 +160,17 @@ public class NewsParserService {
             System.out.println(e.getMessage());
         }
     }
+
+
+    private enum newsTagsEnum {
+        economy,
+        politics,
+        world,
+        society,
+        incidents,
+        defense_safety,
+        culture
+    }
+
+
 }
