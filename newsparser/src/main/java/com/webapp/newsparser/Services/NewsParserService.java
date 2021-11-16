@@ -3,15 +3,24 @@ package com.webapp.newsparser.Services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webapp.newsparser.DAO.NewsRecordRepository;
 import com.webapp.newsparser.DAO.PictureRepository;
+import com.webapp.newsparser.Filters.NewsRecordFilter;
 import com.webapp.newsparser.Models.NewsRecord;
 import com.webapp.newsparser.Models.Picture;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,10 +31,12 @@ import java.util.List;
 import java.util.Locale;
 
 @Service
+@Slf4j
 public class NewsParserService {
 
     private static final String URL_BASE = "https://ria.ru/";
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
 
     public LocalDateTime convertStringToDateTime(String str, LocalDateTime currentDateTime) {
         String resPostedTime;
@@ -58,22 +69,60 @@ public class NewsParserService {
     NewsRecordRepository newsRecordRepository;
     PictureRepository pictureRepository;
 
+    @Scheduled(cron = "0 0/1 * * * *")
+    public void ScheduledParse() {
+        for (newsTagsEnum tag : newsTagsEnum.values()) {
+            log.info("Starting parsin: " + URL_BASE + tag);
+            parseNews(tag.toString());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                System.out.println(e.getMessage());
+            }
+
+        }
+        log.info("Finished all parsing");
+    }
+
     public NewsParserService(NewsRecordRepository newsRecordRepository, PictureRepository pictureRepository) {
         this.newsRecordRepository = newsRecordRepository;
         this.pictureRepository = pictureRepository;
     }
 
-    @Scheduled(cron = "*/5 * * * * *")
-    public void ScheduledParse() {
-        for (newsTagsEnum tag : newsTagsEnum.values()) {
-            parseNews(tag.toString());
-        }
+    public Page<NewsRecord> getAll(NewsRecordFilter filter, Pageable pageable) {
+        return newsRecordRepository.findAll(byFilter(filter), pageable);
     }
 
     public List<NewsRecord> getLastNews() {
         // parseNews();
         //return newsRecordRepository.findTop4ByOrderByIdAsc();
         return newsRecordRepository.findTop4ByOrderByCreatedOnDesc();
+    }
+
+    private Specification<NewsRecord> byFilter(NewsRecordFilter filter) {
+        return new Specification<NewsRecord>() {
+            @Override
+            public Predicate toPredicate(Root<NewsRecord> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+
+                if (filter.getCreatedFrom() != null) {
+                    predicates.add(criteriaBuilder.greaterThanOrEqualTo(
+                            root.get("createdOn"), filter.getCreatedFrom()
+                    ));
+                }
+                if (filter.getCreatedTo() != null) {
+                    predicates.add(criteriaBuilder.lessThanOrEqualTo(
+                            root.get("createdOn"), filter.getCreatedTo()
+                    ));
+                }
+                if (filter.getTag() != null) {
+                    predicates.add(criteriaBuilder.equal(
+                            root.get("tag"), filter.getTag()
+                    ));
+                }
+                return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            }
+        };
     }
 
     public void parseNews(String newsTheme) { //RIA
@@ -139,28 +188,12 @@ public class NewsParserService {
                     newsRecordRepository.save(newsRecord);
                 }
 
-
-
-                //System.out.println(test);
-
-
-//				System.out.println(test.stream().forEach(el -> el.getAllElements().subList(0,3)));
-//				newsPictures.add(contentsLinkTags.get(0).child(0).getAllElements().subList(0,3)
-//						.stream().collect(Collectors.toMap(el -> el.)))
-
-
             });
 
-            //System.out.println(newsElements);
-
-
-            //System.out.println(Arrays.toString(tags));
-            //System.out.println(doc);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
-
 
     private enum newsTagsEnum {
         economy,
