@@ -1,5 +1,6 @@
 package com.webapp.newsparser.Services;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webapp.newsparser.DAO.NewsRecordRepository;
 import com.webapp.newsparser.DAO.PictureRepository;
@@ -27,8 +28,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -36,6 +39,7 @@ public class NewsParserService {
 
     private static final String URL_BASE = "https://ria.ru/";
     private static final ObjectMapper objectMapper = new ObjectMapper();
+//    private static final String tagsNames;
 
 
     public LocalDateTime convertStringToDateTime(String str, LocalDateTime currentDateTime) {
@@ -72,8 +76,8 @@ public class NewsParserService {
     @Scheduled(cron = "0 0/1 * * * *")
     public void ScheduledParse() {
         for (newsTagsEnum tag : newsTagsEnum.values()) {
-            log.info("Starting parsin: " + URL_BASE + tag);
-            parseNews(tag.toString());
+            log.info("Starting parsin: " + URL_BASE + tag.key);
+            parseNews(tag.key);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -91,12 +95,6 @@ public class NewsParserService {
 
     public Page<NewsRecord> getAll(NewsRecordFilter filter, Pageable pageable) {
         return newsRecordRepository.findAll(byFilter(filter), pageable);
-    }
-
-    public List<NewsRecord> getLastNews() {
-        // parseNews();
-        //return newsRecordRepository.findTop4ByOrderByIdAsc();
-        return newsRecordRepository.findTop4ByOrderByCreatedOnDesc();
     }
 
     private Specification<NewsRecord> byFilter(NewsRecordFilter filter) {
@@ -125,6 +123,15 @@ public class NewsParserService {
         };
     }
 
+    public List<String> getNewsTags() {
+//        return Arrays.stream(newsTagsEnum.values()).map(Enum::toString).collect(Collectors.toList());
+        return Arrays.stream(newsTagsEnum.values()).map(x -> x.value).collect(Collectors.toList());
+    }
+
+//    public List<String> getNewsTagsParse() {
+//
+//    }
+
     public void parseNews(String newsTheme) { //RIA
         try {
             Document doc = Jsoup.connect(URL_BASE + newsTheme).get();
@@ -136,7 +143,9 @@ public class NewsParserService {
 
             ArrayList<String> newsDate = new ArrayList<>();
 
-            List<Element> newsElements = doc.getElementsByClass("list-item").subList(0, NEWS_PARSE_COUNT); //только первые 4 новости
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            List<Element> newsElements = doc.getElementsByClass("list-item"); //.subList(0, NEWS_PARSE_COUNT); //только первые 4 новости
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!
             newsElements.stream().forEach(element -> {
                 NewsRecord newsRecord = new NewsRecord();
 
@@ -195,14 +204,32 @@ public class NewsParserService {
         }
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     private enum newsTagsEnum {
-        economy,
-        politics,
-        world,
-        society,
-        incidents,
-        defense_safety,
-        culture
+        TAG("politics", "Политика"),
+        TAG1("world", "В мире"),
+        TAG2("economy", "Экономика"),
+        TAG3("society", "Общество"),
+        TAG4("incidents", "Происшествия"),
+        TAG5("defense_safety", "Безопасность"),
+        TAG6("culture", "Культура");
+
+        private final String key;
+        private final String value;
+
+        newsTagsEnum(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
     }
 
 

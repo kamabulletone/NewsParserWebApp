@@ -26,12 +26,12 @@ public class ParseNewsController {
     @Autowired
     NewsParserService newsParserService;
 
-    @GetMapping
-    public List<NewsRecord> getNews(@RequestParam String newsTheme) {
-        return newsParserService.getLastNews(); //get last 4 news
+    @GetMapping("/tags")
+    public List<String> getNewsTags() {
+        return newsParserService.getNewsTags();
     }
 
-    @GetMapping("/test")
+    @GetMapping("/")
     public ResponseEntity<Map<String, Object>> getAllNews(NewsRecordFilter filter,
                                                           @RequestParam(defaultValue = "0") int page,
                                                           @RequestParam(defaultValue = "5") int size
