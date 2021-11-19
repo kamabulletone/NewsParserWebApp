@@ -1,0 +1,16 @@
+
+ .react-datepicker__input-container input {
+    width: 100%;
+    text-align: center;
+}
+
+.btn:focus{
+    outline: none !important ;
+    box-shadow: none !important ;
+    background-color: #0d6efd !important;
+    border-color: #0d6efd !important;
+  }
+
+
+
+  
