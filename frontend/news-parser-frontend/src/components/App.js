@@ -2,10 +2,6 @@ import React from "react"
 // import Header from "./Header"
 // import { Router, Switch } from "react-router";
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import AppNavbar from "./AppNavbar";
-import HeaderComponent from "./HeaderComponent"
-import NewsColumnContainer from "./NewsColumnContainer"
-import NewsTagsContainer from "./NewsTagsContainer";
 import AboutComponent from "./AboutComponent";
 // import { Router, Switch } from "react-router";
 import HomeComponent from "./HomeComponent";

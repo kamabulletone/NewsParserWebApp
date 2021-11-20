@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AppNavbar from './AppNavbar';
 import "../styles/AboutCss.css";
 import myPic from "../pictures/aboutPictures/me.jpg"
+import Footer from './Footer';
 
 const AboutComponent = () => {
 
@@ -33,6 +34,7 @@ const AboutComponent = () => {
                 </div>
             </div>
         </div>
+        <Footer/>
     </div>
     
   )

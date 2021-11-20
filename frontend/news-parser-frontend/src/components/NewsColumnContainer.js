@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Navbar, NavbarBrand, Collapse,NavItem, Nav, NavbarToggler, NavLink} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import NewsItemContainer from "./NewsItemContainer"
+import "../styles/Footer.css"
 
 
 const NewsColumnContainer = () => {
@@ -13,7 +14,7 @@ const NewsColumnContainer = () => {
         fontFamily: "Arial"
       };
 
-      const newsDisplayCount = 4; //How many news to show
+      const newsDisplayCount = 3; //How many news to show
       const news = []
         for (var i = 0; i < newsDisplayCount; i++) {
         news.push(<NewsItemContainer/>)
@@ -21,8 +22,8 @@ const NewsColumnContainer = () => {
 
   return (
 
-    <div className="container-fluid">
-        <div className="row justify-content-around">
+    <div className="container-fluid main-body">
+        <div className="row justify-content-around pb-4">
             {news}
         </div>
         

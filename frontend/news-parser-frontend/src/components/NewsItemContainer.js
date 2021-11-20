@@ -10,6 +10,8 @@ function NewsItemContainer() {
     const [newsRequestProps,setRequestsProps]=useState({})
     const [initialLoading,setInitialLoading]=useState(false)
     const newsRequestPropsRef = useRef();
+    const [totalPages,setTotalPages]=useState(1)
+    const [currentPage,setCurrentPage]=useState(0)
 
     newsRequestPropsRef.current = newsRequestProps;
 
@@ -18,7 +20,7 @@ function NewsItemContainer() {
       //customGetNewsHandler();
       console.log("request props: " + newsRequestPropsRef.current)
       renderNewsRequest(newsRequestProps);
-  }, [newsRequestProps,initialLoading]);
+  }, [newsRequestProps,initialLoading,totalPages,currentPage]);
 
     function renderNewsRequest() {
       if (Object.values(newsRequestProps).every(x => x === null || x === undefined)) {
@@ -33,6 +35,8 @@ function NewsItemContainer() {
       console.log(newsRequestProps.createdTo)
       console.log(newsRequestProps.tag)
       console.log(newsRequestProps.page)
+      console.log(totalPages)
+      console.log(currentPage)
       axios.get("/api/v1/news/",{ params: 
         {
           createdFrom: newsRequestProps.createdFrom,
@@ -43,9 +47,13 @@ function NewsItemContainer() {
           })
           .then(res=>{
           console.log(res.data)
+          console.log(res.data.totalPages)
+          console.log(res.data.currentPage)
           // console.log(res.data.news);
           // setTagsData(res.data)
           setNewsData(res.data.news);
+          setTotalPages(res.data.totalPages)
+          setCurrentPage(res.data.currentPage)
           })
           .catch(err=>{
           console.log(err);
@@ -70,7 +78,7 @@ function NewsItemContainer() {
 
     return (
         <div className="col-xs-1 col-sm-2 col-md-4 col-lg-3">
-            <TagFormComponent onNewsGetHandler={customGetNewsHandler}/>
+            <TagFormComponent onNewsGetHandler={customGetNewsHandler} currentPage={currentPage} totalPages={totalPages}/>
             <NewsItemContentComponent news={newsData}/>
         </div>
     );
