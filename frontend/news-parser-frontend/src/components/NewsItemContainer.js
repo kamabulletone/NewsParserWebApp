@@ -8,6 +8,7 @@ function NewsItemContainer() {
 
     const [newsData,setNewsData]=useState([])
     const [newsRequestProps,setRequestsProps]=useState({})
+    const [initialLoading,setInitialLoading]=useState(false)
     const newsRequestPropsRef = useRef();
 
     newsRequestPropsRef.current = newsRequestProps;
@@ -17,12 +18,16 @@ function NewsItemContainer() {
       //customGetNewsHandler();
       console.log("request props: " + newsRequestPropsRef.current)
       renderNewsRequest(newsRequestProps);
-  }, [newsRequestProps]);
+  }, [newsRequestProps,initialLoading]);
 
     function renderNewsRequest() {
-      if (newsRequestProps === undefined) {
-        return setNewsData(undefined)
+      if (Object.values(newsRequestProps).every(x => x === null || x === undefined)) {
+        //setNewsData(undefined)
+        return;
       }
+      // if (initialLoading) {
+      //   console.log("not loading full content")
+      // }
       console.log(newsRequestProps)
       console.log(newsRequestProps.createdFrom)
       console.log(newsRequestProps.createdTo)
@@ -53,10 +58,6 @@ function NewsItemContainer() {
         let date2 = format(dict.createdTo, "yyyy-MM-dd HH:mm")
         let page_count = dict.page
         let tag_name = dict.tag
-        // console.log(date1)
-        // console.log(date2)
-        // console.log(page_count)
-        // console.log(tag_name)
         let temp_dict = {
           "createdFrom" : date1,
           "createdTo" : date2,

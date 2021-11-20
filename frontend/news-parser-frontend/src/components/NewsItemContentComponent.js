@@ -35,7 +35,7 @@ function NewsItemContentComponent({news}) {
                         
                     </div>
                     <div className="item_info">
-                        <p>{record.createdOn}</p>
+                        <p>{record.createdOn.replace("T", " ").replaceAll("-", " ")}</p>
                     </div>
                 </div>
         

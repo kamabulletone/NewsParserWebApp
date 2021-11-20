@@ -15,12 +15,12 @@ const AppNavbar = () => {
         navbar
         >
             <NavItem>
-            <NavLink href="/components/">
-                Components
+            <NavLink href="/about">
+                О нас
             </NavLink>
             </NavItem>
             <NavItem>
-            <NavLink href="https://github.com/reactstrap/reactstrap">
+            <NavLink href="https://github.com/kamabulletone/NewsParserWebApp" target="_blank">
                 GitHub
             </NavLink>
             </NavItem>
