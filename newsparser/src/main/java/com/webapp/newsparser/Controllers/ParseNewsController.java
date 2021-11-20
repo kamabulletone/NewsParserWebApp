@@ -27,8 +27,12 @@ public class ParseNewsController {
     NewsParserService newsParserService;
 
     @GetMapping("/tags")
-    public List<String> getNewsTags() {
-        return newsParserService.getNewsTags();
+    public ResponseEntity<List<String>> getNewsTags() {
+        List<String> newsTags = newsParserService.getNewsTags();
+        if (newsTags.isEmpty()) {
+            return new ResponseEntity<>(newsTags, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(newsTags, HttpStatus.OK);
     }
 
     @GetMapping("/")
@@ -45,6 +49,10 @@ public class ParseNewsController {
         response.put("currentPage", news.getNumber());
         response.put("totalItems", news.getTotalElements());
         response.put("totalPages", news.getTotalPages());
+
+        if (news.getContent().isEmpty()) {
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
