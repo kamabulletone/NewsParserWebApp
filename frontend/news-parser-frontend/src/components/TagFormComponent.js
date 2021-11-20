@@ -15,7 +15,7 @@ registerLocale('ru', ru)
 
 
 export default function TagFormComponent(props) {
-    const [currentTag, setCurrentTag] = useState("amogusus");
+    const [currentTag, setCurrentTag] = useState("Not picked");
     const [page_num, setPageNum] = useState(0);
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
@@ -70,6 +70,11 @@ export default function TagFormComponent(props) {
         setPageNum(page_num + 1)
     }
     
+    function decrementPage() {
+      console.log("i've decremented")
+      setPageNum(page_num - 1)
+  }
+    
       const sendRequest = useCallback(async (event) => {
         event.preventDefault();
         if (isSending) return
@@ -100,6 +105,7 @@ export default function TagFormComponent(props) {
             <FormGroup className="w-100"> 
                 <Button name="add" disabled={isSending} className="float-right" style={{float: "right", marginBottom:"5px"}} type="submit" value="Отправить" color="primary"> + </Button>
                 <Button name="next" disabled={isSending} className="float-right" style={{float: "right", marginBottom:"5px", marginRight: "5px"}} type="submit" value="Следующая страница" onClick={incrementPage} color="primary">Следующая страница</Button>
+                <Button name="prev" disabled={isSending} className="float-right" style={{float: "right", marginBottom:"5px", marginRight: "5px"}} type="submit" value="Предыдущая страница" onClick={decrementPage} color="primary">Предыдущая страница</Button>
             </FormGroup>
             <FormGroup>
                 <Input
@@ -108,6 +114,7 @@ export default function TagFormComponent(props) {
                     type="select"
                     onChange={(e) => setCurrentTag(e.target.value)}
                     >
+                    <option disabled selected>Выберите тему</option>
                     {tagsData.map((data,id) => (
                         <option key={id}>{data}</option>
                         ))}
@@ -120,7 +127,7 @@ export default function TagFormComponent(props) {
             showTimeSelect
             // minTime={setHours(setMinutes(new Date(), 0), 0)}
             // maxTime={setHours(setMinutes(new Date(), 23), 59)}
-            dateFormat="MMMM d, yyyy h:mm aa"
+            dateFormat="MMMM d, yyyy HH:mm"
             locale="ru"
             />
             <DatePicker
@@ -129,7 +136,7 @@ export default function TagFormComponent(props) {
             showTimeSelect
             // minTime={setHours(setMinutes(new Date(), 0), 0)}
             // maxTime={setHours(setMinutes(new Date(), 23), 59)}
-            dateFormat="MMMM d, yyyy h:mm aa"
+            dateFormat="MMMM d, yyyy HH:mm"
             locale="ru"
             />
             </FormGroup>          
