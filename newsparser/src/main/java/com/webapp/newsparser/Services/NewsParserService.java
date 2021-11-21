@@ -138,10 +138,9 @@ public class NewsParserService {
 
             ArrayList<String> newsDate = new ArrayList<>();
 
-            //!!!!!!!!!!!!!!!!!!!!!!!!!!!
             List<Element> newsElements = doc.getElementsByClass("list-item");
-            //!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            newsElements.stream().forEach(element -> {
+
+            newsElements.forEach(element -> {
                 NewsRecord newsRecord = new NewsRecord();
 
                 Element contentRoot = element.getElementsByClass("list-item__content").subList(0, 1).get(0); // единственный тег для контента

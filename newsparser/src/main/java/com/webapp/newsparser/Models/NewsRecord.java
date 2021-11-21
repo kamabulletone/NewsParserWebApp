@@ -37,6 +37,4 @@ public class NewsRecord {
 
     @OneToMany(targetEntity = Picture.class)
     private List<Picture> pictures;
-
-
 }
