@@ -8,6 +8,7 @@ import NewsColumnContainer from "./NewsColumnContainer"
 import NewsTagsContainer from "./NewsTagsContainer";
 import AboutComponent from "./AboutComponent";
 import { Router, Switch } from "react-router";
+import Footer from "./Footer";
 
 class HomeComponent extends React.Component {
     
@@ -18,6 +19,7 @@ class HomeComponent extends React.Component {
           <HeaderComponent/>
           <NewsTagsContainer/>
           <NewsColumnContainer/>
+          <Footer/>
         </div>
     );
   }

@@ -138,14 +138,14 @@ public class NewsParserService {
 
             ArrayList<String> newsDate = new ArrayList<>();
 
-            //!!!!!!!!!!!!!!!!!!!!!!!!!!!
             List<Element> newsElements = doc.getElementsByClass("list-item");
-            //!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            newsElements.stream().forEach(element -> {
+
+            newsElements.forEach(element -> {
                 NewsRecord newsRecord = new NewsRecord();
 
                 Element contentRoot = element.getElementsByClass("list-item__content").subList(0, 1).get(0); // единственный тег для контента
                 List<Element> contentsLinkTags = contentRoot.getElementsByTag("a").subList(0, 2); //2 ссылки внутри тега
+                System.out.println(contentsLinkTags);
 
                 String newsLink = contentsLinkTags.get(0).attr("href"); //ссыдка на ресурс из тега для картинок
                 String newsName = contentsLinkTags.get(1).text(); // название тайтла из 2го тега
@@ -172,7 +172,7 @@ public class NewsParserService {
 
                 LocalDateTime time = convertStringToDateTime(postedTime, LocalDateTime.now());
 
-                System.out.println(time);
+                //System.out.println(time);
 
                 newsRecord.setPictures(pictures);
                 newsRecord.setKeyWord(keyWords[0]);

@@ -16,7 +16,8 @@ registerLocale('ru', ru)
 
 export default function TagFormComponent(props) {
     const [currentTag, setCurrentTag] = useState("Not picked");
-    const [page_num, setPageNum] = useState(0);
+    const [page_num, setPageNum] = useState(props.currentPage);
+    const [totalPages, setTotalPages] = useState(props.totalPages);
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
 
@@ -39,6 +40,8 @@ export default function TagFormComponent(props) {
 
     const [isSending, setIsSending] = useState(false)
     const isMounted = useRef(true)
+
+
    
 
     useEffect(() => {
@@ -66,11 +69,20 @@ export default function TagFormComponent(props) {
     //   }
 
     function incrementPage() {
+      if (page_num === totalPages) {
+        console.log("no action")
+        return;
+      }
         console.log("i've incremented")
         setPageNum(page_num + 1)
     }
     
     function decrementPage() {
+      console.log(page_num)
+      if (page_num === 0) {
+        console.log("no action")
+        return;
+      }
       console.log("i've decremented")
       setPageNum(page_num - 1)
   }
@@ -103,6 +115,7 @@ export default function TagFormComponent(props) {
     return (
         <Form name="newsInfo"onSubmit={sendRequest}>
             <FormGroup className="w-100"> 
+                <div style={{display: "inline-block", paddingLeft: "5px", paddingTop: "5px"}}>{page_num}</div>
                 <Button name="add" disabled={isSending} className="float-right" style={{float: "right", marginBottom:"5px"}} type="submit" value="Отправить" color="primary"> + </Button>
                 <Button name="next" disabled={isSending} className="float-right" style={{float: "right", marginBottom:"5px", marginRight: "5px"}} type="submit" value="Следующая страница" onClick={incrementPage} color="primary">Следующая страница</Button>
                 <Button name="prev" disabled={isSending} className="float-right" style={{float: "right", marginBottom:"5px", marginRight: "5px"}} type="submit" value="Предыдущая страница" onClick={decrementPage} color="primary">Предыдущая страница</Button>
