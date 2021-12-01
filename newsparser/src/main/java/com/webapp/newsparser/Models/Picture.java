@@ -23,6 +23,6 @@ public class Picture {
     @Column(name = "media_type")
     private String mediaType;
 
-    @Column(name = "src", unique = true)
+    @Column(name = "src")
     private String src;
 }

@@ -18,6 +18,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -74,6 +75,7 @@ public class NewsParserService {
     PictureRepository pictureRepository;
 
     @Scheduled(cron = "0 0/1 * * * *")
+    @PostConstruct
     public void ScheduledParse() {
         for (newsTagsEnum tag : newsTagsEnum.values()) {
             log.info("Starting parsin: " + URL_BASE + tag.key);
@@ -161,10 +163,15 @@ public class NewsParserService {
                         attrValues.add(attr.getValue());
                     }
                     Picture picture = new Picture(0, attrValues.get(0), attrValues.get(1), attrValues.get(2));
-                    if (pictureRepository.findBySrc(picture.getSrc()) == null) {
-                        picture = pictureRepository.save(picture);
-                        pictures.add(picture);
-                    }
+//                    if ( (pictureRepository.findBySrc(picture.getSrc()) == null) ) {
+//                        picture = pictureRepository.save(picture);
+//                    }
+//                    else {
+//                        picture = pictureRepository.findBySrc(picture.getSrc());
+//                        picture.setId(0);
+//                    }
+
+                    pictures.add(picture);
 
                 }
                 String postedTime = element.getElementsByClass("list-item__info") //инфо баннера: дата просмотры
@@ -173,16 +180,20 @@ public class NewsParserService {
                 LocalDateTime time = convertStringToDateTime(postedTime, LocalDateTime.now());
 
                 //System.out.println(time);
-
                 newsRecord.setPictures(pictures);
                 newsRecord.setKeyWord(keyWords[0]);
                 newsRecord.setTitle(newsName);
                 newsRecord.setTag(tags[0]);
                 newsRecord.setContentLink(newsLink);
                 newsRecord.setCreatedOn(time);
-                if (newsRecordRepository.findByContentLink(newsRecord.getContentLink()) == null) {
+
+                if (newsRecordRepository.findByContentLink(newsLink) == null) {
+
+
                     System.out.println(newsRecord);
-                    newsRecordRepository.save(newsRecord);
+                    pictureRepository.saveAllAndFlush(pictures);
+                    //newsRecordRepository.save(newsRecord);
+                    newsRecordRepository.saveAndFlush(newsRecord);
                 }
 
             });
