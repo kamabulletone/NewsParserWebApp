@@ -115,10 +115,13 @@ export default function TagFormComponent(props) {
     return (
         <Form name="newsInfo"onSubmit={sendRequest}>
             <FormGroup className="w-100"> 
-                <div style={{display: "inline-block", paddingLeft: "5px", paddingTop: "5px"}}>{page_num}</div>
-                <Button name="add" disabled={isSending} className="float-right" style={{float: "right", marginBottom:"5px"}} type="submit" value="Отправить" color="primary"> + </Button>
-                <Button name="next" disabled={isSending} className="float-right" style={{float: "right", marginBottom:"5px", marginRight: "5px"}} type="submit" value="Следующая страница" onClick={incrementPage} color="primary">Следующая страница</Button>
-                <Button name="prev" disabled={isSending} className="float-right" style={{float: "right", marginBottom:"5px", marginRight: "5px"}} type="submit" value="Предыдущая страница" onClick={decrementPage} color="primary">Предыдущая страница</Button>
+            <div className="d-flex justify-content-between">
+                <div style={{display: "inline-block", paddingTop: "5px", paddingLeft:"5px", marginRight:"5px"}}>{page_num}-{totalPages}</div>
+                <button name="prev" disabled={isSending} className="btn btn-primary btn-sm" style={{marginBottom:"5px", marginRight:"5px"}} type="submit" value="Предыдущая страница" onClick={decrementPage} color="primary">Предыдущая страница</button>
+                <button name="next" disabled={isSending} className="btn btn-primary btn-sm" style={{marginBottom:"5px", marginRight:"5px"}} type="submit" value="Следующая страница" onClick={incrementPage} color="primary">Следующая страница</button>
+                <button name="add" disabled={isSending} className="btn btn-primary btn-sm" style={{marginBottom:"5px", marginRight:"5px"}} type="submit" value="Отправить" color="primary"> + </button>
+            </div>
+
             </FormGroup>
             <FormGroup>
                 <Input
