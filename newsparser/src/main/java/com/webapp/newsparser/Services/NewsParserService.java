@@ -190,7 +190,7 @@ public class NewsParserService {
                 if (newsRecordRepository.findByContentLink(newsLink) == null) {
 
 
-                    System.out.println(newsRecord);
+//                    System.out.println(newsRecord);
                     pictureRepository.saveAllAndFlush(pictures);
                     //newsRecordRepository.save(newsRecord);
                     newsRecordRepository.saveAndFlush(newsRecord);

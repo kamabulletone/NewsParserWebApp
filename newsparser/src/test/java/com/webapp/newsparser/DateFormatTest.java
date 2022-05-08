@@ -1,6 +1,7 @@
 package com.webapp.newsparser;
 
 import com.webapp.newsparser.Services.NewsParserService;
+import com.webapp.newsparser.configuration.BaseDbTestClass;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @SpringBootTest
-public class DateFormatTest {
+public class DateFormatTest extends BaseDbTestClass {
 
     @Autowired
     private NewsParserService newsParserService;
