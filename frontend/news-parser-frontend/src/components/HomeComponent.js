@@ -1,7 +1,4 @@
 import React from "react"
-// import Header from "./Header"
-// import { Router, Switch } from "react-router";
-// import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import AppNavbar from "./AppNavbar";
 import HeaderComponent from "./HeaderComponent"
 import NewsColumnContainer from "./NewsColumnContainer"

@@ -17,19 +17,14 @@ function NewsItemContainer() {
 
 
     useEffect(() => {
-      //customGetNewsHandler();
       console.log("request props: " + newsRequestPropsRef.current)
       renderNewsRequest(newsRequestProps);
   }, [newsRequestProps,initialLoading,totalPages,currentPage]);
 
     function renderNewsRequest() {
       if (Object.values(newsRequestProps).every(x => x === null || x === undefined)) {
-        //setNewsData(undefined)
         return;
       }
-      // if (initialLoading) {
-      //   console.log("not loading full content")
-      // }
       console.log(newsRequestProps)
       console.log(newsRequestProps.createdFrom)
       console.log(newsRequestProps.createdTo)
@@ -49,8 +44,6 @@ function NewsItemContainer() {
           console.log(res.data)
           console.log(res.data.totalPages)
           console.log(res.data.currentPage)
-          // console.log(res.data.news);
-          // setTagsData(res.data)
           setNewsData(res.data.news);
           setTotalPages(res.data.totalPages)
           setCurrentPage(res.data.currentPage)
@@ -61,7 +54,6 @@ function NewsItemContainer() {
           
     }
     function customGetNewsHandler(dict) {
-        // console.log("amogus");
         let date1 = format(dict.createdFrom, "yyyy-MM-dd HH:mm")
         let date2 = format(dict.createdTo, "yyyy-MM-dd HH:mm")
         let page_count = dict.page

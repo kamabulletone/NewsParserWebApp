@@ -1,10 +1,5 @@
 import React from "react";
 
-// let imgs = [
-//     "https://cdnn21.img.ria.ru/images/07e5/05/18/1733632342_0:8:1280:728_436x0_80_0_0_2a4c7a06cfb20a80a0b14a38ae89c3ec.jpg.webp",
-//     'C:/Users/Niga/Downloads/test.jpg'
-//   ];
-
 function NewsItemContentComponent({news}) {
 
     

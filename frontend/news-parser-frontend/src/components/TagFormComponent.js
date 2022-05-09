@@ -45,11 +45,9 @@ export default function TagFormComponent(props) {
    
 
     useEffect(() => {
-        // return () => {
           isMounted.current = false
           axios.get("/api/v1/news/tags")
           .then(res=>{
-            //   console.log(res.data);
               setTagsData(res.data)
             })
             .catch(err=>{
@@ -59,14 +57,7 @@ export default function TagFormComponent(props) {
             console.log(startDate)
             console.log(endDate)
             console.log(currentTag)
-
-        // }
       }, [page_num,startDate,endDate,currentTag])
-
-
-    // function handleChange(event) {
-    //     setValue(value);
-    //   }
 
     function incrementPage() {
       if (page_num === totalPages) {
@@ -100,11 +91,6 @@ export default function TagFormComponent(props) {
             "page" : page_numRef.current
         }
         props.onNewsGetHandler(dict);
-        // console.log(event.target[0].value);
-        // console.log(event.target.elements.add.value);
-        // console.log(event.target.add.value);
-        // alert(event.target.elements.add.value);
-        // console.log(event.target.elements.add.value);
         // once the request is sent, update state again
         if (isMounted.current) // only update if we are still mounted
             console.log("button disabled")
@@ -141,8 +127,6 @@ export default function TagFormComponent(props) {
             selected={startDate}
             onChange={(date) => setStartDate(date)}
             showTimeSelect
-            // minTime={setHours(setMinutes(new Date(), 0), 0)}
-            // maxTime={setHours(setMinutes(new Date(), 23), 59)}
             dateFormat="MMMM d, yyyy HH:mm"
             locale="ru"
             />
@@ -150,8 +134,6 @@ export default function TagFormComponent(props) {
             selected={endDate}
             onChange={(date) => setEndDate(date)}
             showTimeSelect
-            // minTime={setHours(setMinutes(new Date(), 0), 0)}
-            // maxTime={setHours(setMinutes(new Date(), 23), 59)}
             dateFormat="MMMM d, yyyy HH:mm"
             locale="ru"
             />

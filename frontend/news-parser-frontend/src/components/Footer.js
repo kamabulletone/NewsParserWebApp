@@ -1,7 +1,6 @@
 import { logDOM } from "@testing-library/react"
 import React from "react"
 import logo from "../pictures/mirea/logo.png" 
-// import "../styles/Footer.css"
 
 const Footer = () => 
 <footer className="page-footer font-small text-white bg-primary pt-4 " >
