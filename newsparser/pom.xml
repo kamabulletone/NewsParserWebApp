@@ -112,17 +112,17 @@
 	</dependencyManagement>
 
 	<build>
-		<resources>
-			<resource>
-				<directory>${project.basedir}/news-parser-frontend/build</directory>
-				<filtering>false</filtering>
-				<targetPath>public/</targetPath>
-			</resource>
-			<resource>
-				<directory>${project.basedir}/src/main/resources</directory>
-				<filtering>false</filtering>
-			</resource>
-		</resources>
+<!--		<resources>-->
+<!--			<resource>-->
+<!--				<directory>${project.basedir}/news-parser-frontend/build</directory>-->
+<!--				<filtering>false</filtering>-->
+<!--				<targetPath>public/</targetPath>-->
+<!--			</resource>-->
+<!--			<resource>-->
+<!--				<directory>${project.basedir}/src/main/resources</directory>-->
+<!--				<filtering>false</filtering>-->
+<!--			</resource>-->
+<!--		</resources>-->
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -201,27 +201,44 @@
 			</plugin>
 
 			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
+				<artifactId>maven-resources-plugin</artifactId>
 				<executions>
 					<execution>
-						<phase>generate-resources</phase>
-						<configuration>
-							<target>
-								<copy todir="${project.build.directory}/classes/public">
-									<fileset dir="${project.basedir}/news-parser-frontend/build"/>
-									<file file="${project.basedir}/news-parser-frontend/static.json"/>
-								</copy>
-<!--								<copy file="${project.basedir}/news-parser-frontend/static.json"-->
-<!--									  todir="${project.build.directory}/classes/public">-->
-<!--								</copy>-->
-							</target>
-						</configuration>
+						<id>copy-resources</id>
+						<phase>process-resources</phase>
 						<goals>
-							<goal>run</goal>
+							<goal>copy-resources</goal>
 						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/classes/resources</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.basedir}/news-parser-frontend/build</directory>
+								</resource>
+							</resources>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
+
+<!--			<plugin>-->
+<!--				<artifactId>maven-antrun-plugin</artifactId>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<phase>generate-resources</phase>-->
+<!--						<configuration>-->
+<!--							<target>-->
+<!--								<copy todir="${project.build.directory}/classes/public">-->
+<!--									<fileset dir="${project.basedir}/news-parser-frontend/build"/>-->
+<!--								</copy>-->
+<!--							</target>-->
+<!--						</configuration>-->
+<!--						<goals>-->
+<!--							<goal>run</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--			</plugin>-->
 
 		</plugins>
 	</build>
