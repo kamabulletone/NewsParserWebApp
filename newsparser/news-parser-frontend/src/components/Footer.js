@@ -9,7 +9,7 @@ const Footer = () =>
         <div className="row">
             <div className="col-md-6 mt-md-0 mt-3">
                 <h5 className="text-uppercase"> <img src={logo} alt="no logo" width="10%"></img> </h5>
-                <p>Курсовая работа по дисциплине РСЧИР</p>
+                <p>Курсовая работа по дисциплине РКСП</p>
             </div>
 
             <hr className="clearfix w-100 d-md-none pb-0"/>

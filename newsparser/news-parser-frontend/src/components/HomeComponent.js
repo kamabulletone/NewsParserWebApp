@@ -6,6 +6,7 @@ import NewsTagsContainer from "./NewsTagsContainer";
 import AboutComponent from "./AboutComponent";
 import { Router, Switch } from "react-router";
 import Footer from "./Footer";
+import { withRouter } from 'react-router';
 
 class HomeComponent extends React.Component {
     
@@ -21,4 +22,4 @@ class HomeComponent extends React.Component {
     );
   }
 }
-export default HomeComponent
+export default withRouter(HomeComponent);
