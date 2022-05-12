@@ -3,6 +3,7 @@ import AppNavbar from './AppNavbar';
 import "../styles/AboutCss.css";
 import myPic from "../pictures/aboutPictures/me.jpg"
 import Footer from './Footer';
+import { withRouter } from 'react-router';
 
 const AboutComponent = () => {
 
@@ -39,4 +40,4 @@ const AboutComponent = () => {
     
   )
 }
-export default AboutComponent;
+export default withRouter(AboutComponent);

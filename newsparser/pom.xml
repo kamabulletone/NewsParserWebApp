@@ -209,7 +209,11 @@
 							<target>
 								<copy todir="${project.build.directory}/classes/public">
 									<fileset dir="${project.basedir}/news-parser-frontend/build"/>
+									<file file="${project.basedir}/news-parser-frontend/static.json"/>
 								</copy>
+<!--								<copy file="${project.basedir}/news-parser-frontend/static.json"-->
+<!--									  todir="${project.build.directory}/classes/public">-->
+<!--								</copy>-->
 							</target>
 						</configuration>
 						<goals>

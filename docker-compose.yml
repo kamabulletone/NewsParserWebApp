@@ -8,6 +8,7 @@ services:
     ports:
       - '5432:5432'
     restart: always
+
   backend:
     build: ./newsparser/.
     container_name: backend
@@ -15,10 +16,3 @@ services:
         - '8085:8085'
     depends_on:
         - postgres_db
-  frontend:
-    build: ./frontend/news-parser-frontend/.
-    container_name: frontend
-    ports:
-        - '3000:3000'
-    depends_on:
-        - backend
