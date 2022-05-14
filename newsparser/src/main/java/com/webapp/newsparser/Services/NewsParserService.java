@@ -105,17 +105,20 @@ public class NewsParserService {
             public Predicate toPredicate(Root<NewsRecord> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
 
-                if (filter.getCreatedFrom() != null) {
-                    predicates.add(criteriaBuilder.greaterThanOrEqualTo(
-                            root.get("createdOn"), filter.getCreatedFrom()
-                    ));
+                if (filter.getCreatedTo() != filter.getCreatedFrom()) {
+                    if (filter.getCreatedFrom() != null) {
+                        predicates.add(criteriaBuilder.greaterThanOrEqualTo(
+                                root.get("createdOn"), filter.getCreatedFrom()
+                        ));
+                    }
+                    if (filter.getCreatedTo() != null) {
+                        predicates.add(criteriaBuilder.lessThanOrEqualTo(
+                                root.get("createdOn"), filter.getCreatedTo()
+                        ));
+                    }
                 }
-                if (filter.getCreatedTo() != null) {
-                    predicates.add(criteriaBuilder.lessThanOrEqualTo(
-                            root.get("createdOn"), filter.getCreatedTo()
-                    ));
-                }
-                if (filter.getTag() != null) {
+
+                if (filter.getTag() != null && !filter.getTag().equals("Not picked")) {
                     predicates.add(criteriaBuilder.equal(
                             root.get("tag"), filter.getTag()
                     ));
