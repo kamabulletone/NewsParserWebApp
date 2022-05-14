@@ -41,7 +41,7 @@ const NewsTagsContainer = () => {
 
     <div >
         <div style={{backgroundColor: 'darkred', border: "1px solid darkblue", color: 'white', marginBottom: '5%'}} 
-        className="row p-3 justify-content-between">
+        className="row g-0 p-3 justify-content-between">
             {/* col-xs-1 col-sm-2 col-md-4 col-lg-2 */}
             {tags}
 
